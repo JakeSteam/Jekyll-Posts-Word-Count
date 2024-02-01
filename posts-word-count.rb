@@ -34,6 +34,11 @@ class PostsWordCount < Liquid::Tag
 		@tokens = tokens
 	end
 
+    def format_number(number)
+        num_groups = number.to_s.chars.to_a.reverse.each_slice(3)
+        num_groups.map(&:join).join(',').reverse
+    end
+
 	def render(context)
 		the_result = nil
 		all_posts = context.registers[:site].posts.docs # OLDEST first!
@@ -64,15 +69,15 @@ class PostsWordCount < Liquid::Tag
 		@average_character_count = @total_character_count / all_posts.count
 
 		if @text == "total"
-			the_result = @total_word_count
+			the_result = format_number(@total_word_count)
 		elsif @text == "average"
-			the_result = @average_word_count
+			the_result = format_number(@average_word_count)
 		elsif @text == "total_characters"
-			the_result = @total_character_count
+			the_result = format_number(@total_character_count)
 		elsif @text == "average_characters"
-			the_result = @average_character_count
+			the_result = format_number(@average_character_count)
 		elsif @text == "longest"
-			the_result = @longest_word_count
+			the_result = format_number(@longest_word_count)
 		elsif @text == "longest_post_index"
 			the_result = @longest_post_index
 		elsif @text == "longest_post_title"
@@ -80,7 +85,7 @@ class PostsWordCount < Liquid::Tag
 		elsif @text == "longest_post_url"
 			the_result = @longest_post_url
 		elsif @text == "shortest"
-			the_result = @shortest_word_count
+			the_result = format_number(@shortest_word_count)
 		elsif @text == "shortest_post_index"
 			the_result = @shortest_post_index
 		elsif @text == "shortest_post_title"
